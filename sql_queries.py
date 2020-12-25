@@ -6,6 +6,8 @@ song_table_drop = "DROP TABLE IF EXISTS songs"
 artist_table_drop = "DROP TABLE IF EXISTS artists"
 time_table_drop = "DROP TABLE IF EXISTS time"
 
+# TODO: add foreign keys
+
 # CREATE TABLES
 songplay_table_create = ("""CREATE TABLE IF NOT EXISTS songplays 
                             (songplay_id int, start_time bigint, user_id int, level varchar, song_id varchar, 
