@@ -7,24 +7,27 @@ def create_database():
     - Creates and connects to the sparkifydb
     - Returns the connection and cursor to sparkifydb
     """
-    
-    # connect to default database
+
+    # connect to default database with superuser
     conn = psycopg2.connect("host=127.0.0.1 dbname=postgres user=manuel")
     conn.set_session(autocommit=True)
     cur = conn.cursor()
-    
-    # create sparkify database with UTF8 encoding
+
+    # create sparkifydb database with UTF8 encoding
     cur.execute("DROP DATABASE IF EXISTS sparkifydb")
     cur.execute("CREATE DATABASE sparkifydb WITH ENCODING 'utf8' TEMPLATE template0")
+
+    # grant privileges to student role
     cur.execute("GRANT ALL PRIVILEGES ON DATABASE sparkifydb to student")
 
     # close connection to default database
-    conn.close()    
-    
+    conn.close()
+
     # connect to sparkify database
     conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
+    conn.set_session(autocommit=True)
     cur = conn.cursor()
-    
+
     return cur, conn
 
 
@@ -60,7 +63,7 @@ def main():
     - Finally, closes the connection. 
     """
     cur, conn = create_database()
-    
+
     drop_tables(cur, conn)
     create_tables(cur, conn)
 
