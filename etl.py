@@ -145,7 +145,7 @@ def process_log_files(connection, filepath):
     songs = pd.read_sql('select * from songs', connection)
     full_songs = pd.merge(songs, artists, on='artist_id').get(['song_id', 'artist_id', 'title', 'name', 'duration'])
 
-    songplays = pd.merge(df, full_songs, left_on=['song', 'artist', 'length'], right_on=['title', 'name', 'duration'])
+    songplays = pd.merge(df, full_songs, left_on=['song', 'artist', 'length'], right_on=['title', 'name', 'duration'], how='left')
     songplays = songplays.reset_index()
     songplays_data = songplays.get(
         ['index', 'ts', 'userId', 'level', 'song_id', 'artist_id', 'sessionId', 'location', 'userAgent'])
