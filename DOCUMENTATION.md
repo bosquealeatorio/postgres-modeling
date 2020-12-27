@@ -31,4 +31,4 @@ python create_tables.py
 python etl.py
 ``` 
 
-Validate the inserts using the notebook `test.ipynb`
+Validate the inserts using the notebooks `test.ipynb` and `test-validation.ipynb`
