@@ -8,7 +8,7 @@
 
 ## Usage
 
-Clone the repository and locate on the root folder
+Clone the repository and locate on the root folder  
 ```
 git clone https://github.com/manuel-montoya-gamio/postgres-modeling.git  
 cd postgres-modeling

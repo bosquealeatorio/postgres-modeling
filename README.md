@@ -16,7 +16,7 @@ Make sure you have the following dependencies installed before proceeding:
 
 - Python 3+ distribution
 - Conda package manager
-- Postgres SQL Installation
+- Postgres SQL Installation  
 
 ## Datasets
 
