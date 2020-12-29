@@ -31,4 +31,10 @@ python create_tables.py
 python etl.py
 ``` 
 
+For the bulk inserts with copy-from execute the v2 files
+```
+python create_tables_v2.py  
+python etl_v2.py
+``` 
+
 Validate the inserts using the notebooks `test.ipynb` and `test-validation.ipynb`
