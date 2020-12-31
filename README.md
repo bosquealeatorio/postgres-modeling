@@ -65,12 +65,6 @@ Python files
 - `etl.py`: reads and processes files from song_data and log_data and loads them into the tables.
 - `sql_queries.py`: contains all the sql queries, and is imported into the last two files above.
 
-## Dependencies
-
-- Python 3+ distribution
-- Conda package manager
-- Postgres SQL Installation
-
 ## Usage
 
 Clone the repository and locate on the root folder  
