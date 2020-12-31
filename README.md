@@ -50,7 +50,59 @@ Using the song and log datasets, you'll need to create a star schema optimized f
 - artists - artists in music database  
 `artist_id, name, location, latitude, longitude`
 - time - timestamps of records in songplays broken down into specific units  
-`start_time, hour, day, week, month, year, weekday`
+`start_time, hour, day, week, month, year, weekday` 
+
+## Files
+
+Notebooks
+- `etl.ipynb`: this development notebook contains detailed instructions on the ETL process for each of the tables.
+- `test.ipynb`: displays the first few rows of each table to check the database.
+- `test-validation.ipynb`: extra validation of the primary keys in each table.
+
+Python files
+
+- `create_tables.py`: drops and creates the tables. Use this file to reset the tables before each time you run your ETL scripts.
+- `etl.py`: reads and processes files from song_data and log_data and loads them into the tables.
+- `sql_queries.py`: contains all the sql queries, and is imported into the last two files above.
+
+## Dependencies
+
+- Python 3+ distribution
+- Conda package manager
+- Postgres SQL Installation
+
+## Usage
+
+Clone the repository and locate on the root folder  
+```
+git clone https://github.com/manuel-montoya-gamio/postgres-modeling.git  
+cd postgres-modeling
+```
+
+Create a virtual environment with the `environment.yml` file
+```
+conda env create -f environment.yml  
+conda activate postgres-modeling
+```   
+
+Start Postgres with the following command 
+```
+pg_ctl -D /usr/local/var/postgres start && brew services start postgresql
+```
+
+Execute the scripts from the root folder postgres-modeling
+```
+python create_tables.py  
+python etl.py
+``` 
+
+For the bulk inserts with copy-from execute the v2 files
+```
+python create_tables_v2.py  
+python etl_v2.py
+``` 
+
+Validate the inserts using the notebooks `test.ipynb` and `test-validation.ipynb`
 
 ## License
 This project is licensed under the [MIT License](https://choosealicense.com/licenses/mit/) 

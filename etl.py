@@ -6,29 +6,41 @@ from sql_queries import *
 
 
 def process_song_file(cur, filepath):
-    """reads a songs file and insert the values into the songs and artists tables"""
+    """
+    Description: reads a songs file and inserts the values into the songs and artists tables
+
+    Arguments:
+        cur: cursor object
+        filepath: song data file path
+
+    Returns:
+        None
+    """
     
     # open song file
     df = pd.read_json(filepath, lines = True)
 
     # insert song record
     song_data = df.get(['song_id', 'title', 'artist_id', 'year', 'duration']).values.tolist()[0]
-
-    try:
-        cur.execute(song_table_insert, song_data)
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(f"Error (songs): %s" % error)
+    cur.execute(song_table_insert, song_data)
 
     # insert artist record
     artist_data = df.get(['artist_id', 'artist_name', 'artist_location', 'artist_latitude', 'artist_longitude']).values.tolist()[0]
-
-    try:
-        cur.execute(artist_table_insert, artist_data)
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(f"Error (artists): %s" % error)
+    cur.execute(artist_table_insert, artist_data)
 
 
 def process_log_file(cur, filepath):
+    """
+    Description: reads a log file and inserts the values into the time, users and songplays tables
+
+    Arguments:
+        cur: cursor object
+        filepath: log data file path
+
+    Returns:
+        None
+    """
+
     # open log file
     df = pd.read_json(filepath, lines = True)
 
@@ -44,24 +56,14 @@ def process_log_file(cur, filepath):
     time_df = pd.DataFrame({col: values for col,values in zip(column_labels, time_data)})
 
     for i, row in time_df.iterrows():
-
-        try:
-            cur.execute(time_table_insert, list(row))
-        except (Exception, psycopg2.DatabaseError) as error:
-            print(f"Error (time): %s" % error)
-
+        cur.execute(time_table_insert, list(row))
 
     # load user table
     user_df = df.get(['userId', 'firstName', 'lastName', 'gender', 'level']).drop_duplicates()
 
     # insert user records
     for i, row in user_df.iterrows():
-
-        try:
-            cur.execute(user_table_insert, row)
-        except (Exception, psycopg2.DatabaseError) as error:
-            pass
-            #print(f"Error (users): %s" % error)
+        cur.execute(user_table_insert, row)
 
     # insert songplay records
     for index, row in df.iterrows():
@@ -77,16 +79,27 @@ def process_log_file(cur, filepath):
         else:
             songid, artistid = None, None
 
-        songplay_data = (f'{row.sessionId}_{row.ts}', row.ts, row.userId, row.level, songid, artistid, row.sessionId, row.location, row.userAgent)
+        songplay_data = (row.ts, row.userId, row.level, songid, artistid, row.sessionId, row.location, row.userAgent)
 
-        try:
-            cur.execute(songplay_table_insert, songplay_data)
-        except (Exception, psycopg2.DatabaseError) as error:
-            pass
-            #print(f"Error (users): %s" % error)
+        cur.execute(songplay_table_insert, songplay_data)
 
 
 def process_data(cur, conn, filepath, func):
+    """
+    Description: lists all the files in a directory, and then executes the ingest
+    process for each file according to the function that performs the transformation
+    to save it to the database.
+
+    Arguments:
+        cur: the cursor object.
+        conn: connection to the database.
+        filepath: log data or song data file path.
+        func: function that transforms the data and inserts it into the database.
+
+    Returns:
+        None
+    """
+
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
@@ -106,6 +119,16 @@ def process_data(cur, conn, filepath, func):
 
 
 def main():
+    """
+    Description: Main function to insert the files into the database.
+
+    Arguments:
+        None
+
+    Returns:
+        None
+    """
+
     conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
     conn.set_session(autocommit=True)
     cur = conn.cursor()
